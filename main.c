@@ -4,6 +4,14 @@
 
 struct InductionMachineSimulated IM;
 
+struct ControllerForExperiment CTRL;
+
+struct InductionMachine im;
+
+struct SofterStarter SORFTSTARTER;
+
+double freq;
+
 void IM_init(){
     int i;
     for(i=0;i<5;++i){
@@ -38,7 +46,7 @@ void IM_init(){
 }
 
 void rK5_dynamics(double t, double *x, double *fx){
-    // electromagnetic model
+    // electromagnetic model x[2]=psi_a x[3]=psi_b
     fx[2] = IM.rreq*x[0] - IM.alpha*x[2] - x[4]*x[3];
     fx[3] = IM.rreq*x[1] - IM.alpha*x[3] + x[4]*x[2];
     fx[0] = (IM.ual - IM.rs*x[0] - fx[2])/IM.Lsigma;
@@ -122,8 +130,8 @@ int main(){
     for(_=0;_<NUMBER_OF_LINES;++_){
 
         /* Command and Load Torque */
-        IM.rpm_cmd = 50;
-        IM.Tload = 1;
+        IM.rpm_cmd = 500000;
+        IM.Tload = 0;
 
         /* Simulated IM */
         if(machine_simulation()){ 
@@ -145,8 +153,16 @@ int main(){
 
             #if VVVF_CONTROL == TRUE
                 #define VF_RATIO 18 //18.0 // 8 ~ 18 shows saturated phenomenon
-                double freq = 2; // 0.15 ~ 0.5 ~ 2 （0.1时电压李萨茹就变成一个圆了）
-                double volt = VF_RATIO*freq;
+                //double freq = 2 // 0.15 ~ 0.5 ~ 2 （0.1时电压李萨茹就变成一个圆了）
+                SORFTSTARTER.acc = 20;
+                CTRL.rpm_cmd = 1200;
+
+                /* soft start*/
+                SoftStarter(CTRL.rpm_cmd,SORFTSTARTER.acc);
+                /* soft start end */
+
+                freq = SORFTSTARTER.rpm_now*IM.npp/60;
+                double volt = 360;//VF_RATIO*freq;
                 CTRL.ual = volt*cos(2*M_PI*freq*CTRL.timebase);
                 CTRL.ube = volt*sin(2*M_PI*freq*CTRL.timebase);
             #else

@@ -1,4 +1,5 @@
 #include "ACMSim.h"
+#include "controller.h"
 
 struct ControllerForExperiment CTRL;
 
@@ -22,4 +23,12 @@ void CTRL_init(){
     CTRL.ube = 0.0;
 
     CTRL.rpm_cmd = 0.0;
+}
+void SoftStarter(double rpm_limit, double acctime)
+{
+    SORFTSTARTER.scale = rpm_limit/(SORFTSTARTER.acc/TS); //计算每个MCU控制周期增加的RPM步长 //TS (IM_TS*DOWN_FREQ_EXE) //2.5e-4 
+    if (SORFTSTARTER.rpm_now <= rpm_limit)
+    {
+      SORFTSTARTER.rpm_now += SORFTSTARTER.scale;                    
+    } 
 }
