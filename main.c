@@ -12,6 +12,7 @@ struct SofterStarter SORFTSTARTER;
 
 double freq;
 
+
 void IM_init(){
     int i;
     for(i=0;i<5;++i){
@@ -152,17 +153,19 @@ int main(){
             write_data_to_file(fw);
 
             #if VVVF_CONTROL == TRUE
-                #define VF_RATIO 18 //18.0 // 8 ~ 18 shows saturated phenomenon
+                //#define VF_RATIO 7.6 //18.0 // 8 ~ 18 shows saturated phenomenon
                 //double freq = 2 // 0.15 ~ 0.5 ~ 2 （0.1时电压李萨茹就变成一个圆了）
-                SORFTSTARTER.acc = 20;
-                CTRL.rpm_cmd = 1200;
+                SORFTSTARTER.acc = 10;
+                CTRL.rpm_cmd = 1500;
 
                 /* soft start*/
                 SoftStarter(CTRL.rpm_cmd,SORFTSTARTER.acc);
                 /* soft start end */
 
                 freq = SORFTSTARTER.rpm_now*IM.npp/60;
-                double volt = 360;//VF_RATIO*freq;
+
+                double volt = 40;
+
                 CTRL.ual = volt*cos(2*M_PI*freq*CTRL.timebase);
                 CTRL.ube = volt*sin(2*M_PI*freq*CTRL.timebase);
             #else
@@ -194,7 +197,7 @@ void write_data_to_file(FILE *fw){
     {
         j=0;
         fprintf(fw, "%g,%g,%g,%g,%g\n",
-                IM.x[0], IM.x[1], IM.x[2], IM.x[3], IM.x[4]
+                IM.x[0], IM.x[1], IM.x[2], IM.x[3],  IM.rpm//IM.Tem//IM.x[4]
                 );
     }
     }

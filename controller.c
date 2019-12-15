@@ -26,9 +26,31 @@ void CTRL_init(){
 }
 void SoftStarter(double rpm_limit, double acctime)
 {
-    SORFTSTARTER.scale = rpm_limit/(SORFTSTARTER.acc/TS); //计算每个MCU控制周期增加的RPM步长 //TS (IM_TS*DOWN_FREQ_EXE) //2.5e-4 
-    if (SORFTSTARTER.rpm_now <= rpm_limit)
-    {
-      SORFTSTARTER.rpm_now += SORFTSTARTER.scale;                    
+    SORFTSTARTER.scale = rpm_limit/(SORFTSTARTER.acc/TS); //计算每个MCU控制周期增加的RPM步长 //TS (IM_TS*DOWN_FREQ_EXE) //2.5e-4
+
+    if (CTRL.timebase < SORFTSTARTER.acc)
+    { 
+        SORFTSTARTER.rpm_now += SORFTSTARTER.scale;                   
     } 
+
+}
+double PI(struct PI_Reg *r, double err){
+    #define I_STATE r->i_state
+    #define I_LIMIT r->i_limit
+    double output;
+    I_STATE += err * r->Ki;    // 积分
+    if( I_STATE > I_LIMIT)     // 添加积分饱和特性
+        I_STATE = I_LIMIT; 
+    else if( I_STATE < -I_LIMIT)
+        I_STATE = -I_LIMIT;
+
+    output = I_STATE + err * r->Kp;
+
+    if(output > I_LIMIT)
+        output = I_LIMIT;
+    else if(output < -I_LIMIT)
+        output = -I_LIMIT;
+    return output;
+    #undef I_STATE
+    #undef I_LIMIT
 }

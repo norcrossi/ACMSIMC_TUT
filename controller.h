@@ -2,6 +2,14 @@
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
 
+struct PI_Reg{
+   double   Kp;
+   double   Ti;
+   double   Ki; // Ki = Kp/Ti*TS
+   double   i_state;
+   double   i_limit;
+};
+double PI(struct PI_Reg *r, double err);
 
 struct ControllerForExperiment{
 
