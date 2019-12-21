@@ -44,6 +44,11 @@
 #define Uint16 unsigned int
 #define PHASE_NUMBER 3
 
+// park变化
+#define AB2M(A, B, COS, SIN)  ( (A)*COS  + (B)*SIN )
+#define AB2T(A, B, COS, SIN)  ( (A)*-SIN + (B)*COS )
+#define MT2A(M, T, COS, SIN)  ( (M)*COS - (T)*SIN )
+#define MT2B(M, T, COS, SIN)  ( (M)*SIN + (T)*COS )
 
 struct InductionMachineSimulated{
     double x[13]; ////////////////////////////////

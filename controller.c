@@ -1,5 +1,4 @@
 #include "ACMSim.h"
-#include "controller.h"
 
 struct ControllerForExperiment CTRL;
 
@@ -54,3 +53,9 @@ double PI(struct PI_Reg *r, double err){
     #undef I_STATE
     #undef I_LIMIT
 }
+void IMCLV(double spd, double torq，double)
+{
+    
+}
+
+

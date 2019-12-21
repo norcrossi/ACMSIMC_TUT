@@ -47,7 +47,7 @@ void IM_init(){
 }
 
 void rK5_dynamics(double t, double *x, double *fx){
-    // electromagnetic model x[2]=psi_a x[3]=psi_b
+    // electromagnetic model
     fx[2] = IM.rreq*x[0] - IM.alpha*x[2] - x[4]*x[3];
     fx[3] = IM.rreq*x[1] - IM.alpha*x[3] + x[4]*x[2];
     fx[0] = (IM.ual - IM.rs*x[0] - fx[2])/IM.Lsigma;
@@ -131,8 +131,8 @@ int main(){
     for(_=0;_<NUMBER_OF_LINES;++_){
 
         /* Command and Load Torque */
-        IM.rpm_cmd = 500000;
-        IM.Tload = 0;
+        IM.rpm_cmd = 50;
+        IM.Tload = 1;
 
         /* Simulated IM */
         if(machine_simulation()){ 
@@ -153,6 +153,7 @@ int main(){
             write_data_to_file(fw);
 
             #if VVVF_CONTROL == TRUE
+
                 //#define VF_RATIO 7.6 //18.0 // 8 ~ 18 shows saturated phenomenon
                 //double freq = 2 // 0.15 ~ 0.5 ~ 2 （0.1时电压李萨茹就变成一个圆了）
                 SORFTSTARTER.acc = 10;
@@ -165,6 +166,10 @@ int main(){
                 freq = SORFTSTARTER.rpm_now*IM.npp/60;
 
                 double volt = 40;
+
+                #define VF_RATIO 18 //18.0 // 8 ~ 18 shows saturated phenomenon
+                double freq = 2; // 0.15 ~ 0.5 ~ 2 （0.1时电压李萨茹就变成一个圆了）
+                double volt = VF_RATIO*freq;
 
                 CTRL.ual = volt*cos(2*M_PI*freq*CTRL.timebase);
                 CTRL.ube = volt*sin(2*M_PI*freq*CTRL.timebase);

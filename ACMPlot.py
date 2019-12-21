@@ -94,11 +94,11 @@ def plot_it(ax, ylabel, d):
 time = arange(1,ll[0].__len__()+1,1) * 10/4000.000000
 # title: Observer
 ax_list = get_axis((1,3))
-plot_it(ax_list[0], r'$i_s$ [A]', O([
+plot_it(ax_list[0], r'$i_s$ [V]', O([
                                              (r'0',   ll[0]),  
                                              (r'1',   ll[1]),  
                                              ]))
-plot_it(ax_list[1], r'$\psi_\mu$ [B]', O([
+plot_it(ax_list[1], r'$\psi_\mu$ [A]', O([
                                              (r'0',   ll[2]),  
                                              (r'1',   ll[3]),  
                                              ]))
