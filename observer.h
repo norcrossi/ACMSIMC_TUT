@@ -31,6 +31,11 @@ struct InductionMachine{
 
     double npp;
     double omg;
+
+    double iMr_ob;//预测转子M轴电流
+    double iTr_ob;//预测转子T轴电流
+
+
 };
 extern struct InductionMachine im;
 

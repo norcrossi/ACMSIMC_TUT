@@ -131,7 +131,6 @@ int main(){
     for(_=0;_<NUMBER_OF_LINES;++_){
 
         /* Command and Load Torque */
-        IM.rpm_cmd = 50;
         IM.Tload = 1;
 
         /* Simulated IM */
@@ -174,7 +173,8 @@ int main(){
                 CTRL.ual = volt*cos(2*M_PI*freq*CTRL.timebase);
                 CTRL.ube = volt*sin(2*M_PI*freq*CTRL.timebase);
             #else
-                control();
+                //control();
+                IMCLV();
             #endif
         }
 
